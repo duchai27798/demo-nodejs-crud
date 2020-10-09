@@ -1,0 +1,15 @@
+/**
+ *
+ * @copyright Nitro Tech Asia Inc. 2020
+ *
+ * @author hainguyen <hainguyen27798@gmail.com>
+ *
+ */
+
+$sizes: 11, 12, 14, 16, 18, 20, 22, 24, 32, 36, 42, 62;
+
+@each $size in $sizes {
+    .size-#{$size} {
+        font-size: $size / 16 * 1rem;
+    }
+}

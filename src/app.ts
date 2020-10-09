@@ -12,6 +12,8 @@ import dotenv from 'dotenv';
 import path from 'path';
 import expressLayouts from 'express-ejs-layouts';
 import router from './routes/route';
+import bodyParser from 'body-parser';
+import logger from 'morgan';
 
 dotenv.config({ path: `${__dirname}/../.env` });
 
@@ -22,9 +24,11 @@ app.set('views', path.join(__dirname, 'resources/views'));
 app.set('view engine', 'ejs');
 app.set('layout', 'layouts/root');
 
+app.use(express.static(path.join(__dirname, '/resources')));
 app.use(expressLayouts);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(logger('dev'));
 
 app.use('/', router);
 
