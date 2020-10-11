@@ -14,6 +14,9 @@ import expressLayouts from 'express-ejs-layouts';
 import router from './routes/route';
 import bodyParser from 'body-parser';
 import logger from 'morgan';
+import expressSession from 'express-session';
+import { generateHelper } from './helpers/common.helper';
+import cookieParser from 'cookie-parser';
 
 dotenv.config({ path: `${__dirname}/../.env` });
 
@@ -27,8 +30,18 @@ app.set('layout', 'layouts/root');
 app.use(express.static(path.join(__dirname, '/resources')));
 app.use(expressLayouts);
 app.use(bodyParser.json());
+app.use(
+    expressSession({
+        secret: 'max',
+        saveUninitialized: false,
+        resave: false,
+    })
+);
+app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(logger('dev'));
+
+generateHelper(app);
 
 app.use('/', router);
 

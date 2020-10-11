@@ -10,19 +10,23 @@
         <h3 class="size-22 font-weight-bolder text-center m-b-20">Register Account</h3>
         <div class="form-group">
             <label for="input-name" class="size-14 font-weight-bold">Full Name</label>
-            <input type="email" class="form-control" name="fullName" id="input-name" placeholder="Nguyen Van A">
+            <input type="text" class="form-control" name="full_name" id="input-name" value="<%= get(content, 'full_name.value') %>" placeholder="Nguyen Van A">
+            <div class="text-danger"><%= get(content, 'full_name.msg') %></div>
         </div>
         <div class="form-group">
             <label for="input-email" class="size-14 font-weight-bold">Email address</label>
-            <input type="email" class="form-control" id="input-email" placeholder="name@example.com">
+            <input type="email" class="form-control" id="input-email" name="email" value="<%= get(content, 'email.value') %>" placeholder="name@example.com">
+            <div class="text-danger"><%= get(content, 'email.msg') %></div>
         </div>
         <div class="form-group m-b-30">
             <label for="input-password" class="size-14 font-weight-bold">Password</label>
-            <input type="password" class="form-control" id="input-password" placeholder="Password">
+            <input type="password" class="form-control" id="input-password" name="password" placeholder="Password">
+            <div class="text-danger"><%= get(content, 'password.msg') %></div>
         </div>
         <div class="form-group m-b-30">
             <label for="input-re-password" class="size-14 font-weight-bold">Confirm password</label>
-            <input type="password" class="form-control" id="input-re-password" placeholder="Confirm Password">
+            <input type="password" class="form-control" id="input-re-password" name="confirm_password" placeholder="Confirm Password">
+            <div class="text-danger"><%= get(content, 'confirm_password.msg') %></div>
         </div>
         <button class="btn btn-success w-100 m-b-30">Register</button>
         <div class="text-black-50 text-center">

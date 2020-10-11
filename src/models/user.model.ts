@@ -11,7 +11,10 @@
 import { mongoose } from '../utils/database-connection';
 
 const userSchema = new mongoose.Schema({
-    _id: mongoose.Schema.Types.ObjectId,
+    _id: {
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true,
+    },
     full_name: {
         type: String,
         required: true,
@@ -33,4 +36,4 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-export default mongoose.model('user', userSchema);
+export default mongoose.model('User', userSchema);
