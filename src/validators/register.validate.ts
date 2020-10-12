@@ -8,10 +8,9 @@
  *
  */
 
-import { check, oneOf } from 'express-validator';
+import { check } from 'express-validator';
 import _ from 'lodash';
 import { User } from '../models';
-import { loadConfigurationFromPath } from 'tslint/lib/configuration';
 
 export const validateRegister = () => {
     return [

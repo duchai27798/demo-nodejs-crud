@@ -1,0 +1,81 @@
+<!-- Modal -->
+<div class="modal fade" id="user-editor-dialog" tabindex="-1" role="dialog" aria-labelledby="user-editor-dialog-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="user-editor-dialog-label"></h5>
+            </div>
+            <form class="modal-body" id="user-editor-form">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="hidden" id="input-id" name="_id">
+                <div class="form-group">
+                    <label for="input-name" class="size-14 font-weight-bold">Full Name</label>
+                    <input type="text" class="form-control" name="full_name" id="input-name" placeholder="Nguyen Van A">
+                </div>
+                <div class="form-group">
+                    <label for="input-email" class="size-14 font-weight-bold">Email address</label>
+                    <input type="email" class="form-control" id="input-email" name="email" placeholder="name@example.com">
+                </div>
+            </form>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" form="user-editor-form">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $('#user-editor-dialog').on('show.bs.modal', function (e) {
+        const id = $(e.relatedTarget).attr('data-id');
+
+        if (id) {
+            $('#user-editor-dialog-label').html('Update User');
+
+            $.ajax({
+                url: `/api/users/${id}`,
+                method: 'get',
+                data: {
+                    _csrf: $('meta[name="_csrf"]').attr('content')
+                },
+                success: function (data) {
+                    $('#input-name').val(data['full_name']);
+                    $('#input-email').val(data['email']);
+                    $('#input-id').val(data['_id']);
+
+                    $('#input-email').addClass('disabled-half');
+                }
+            });
+        } else {
+            $('#user-editor-dialog-label').html('Create User');
+            $('#input-name').val('');
+            $('#input-email').val('');
+            $('#input-id').val('');
+
+            $('#input-email').removeClass('disabled-half');
+        }
+    });
+
+    $('#user-editor-form').submit(e => {
+        e.preventDefault();
+
+        const formData = {};
+
+        $.each($('#user-editor-form').serializeArray(), function(i, field) {
+            formData[field.name] = field.value;
+        });
+
+        const action = formData['_id'] ? 'update' : 'create';
+
+        $.ajax({
+            url: `/api/users/${action}`,
+            method: 'post',
+            data: formData,
+            success: function (data) {
+                if (data['success']) {
+                    window.location.reload();
+                }
+            }
+        });
+    })
+</script>

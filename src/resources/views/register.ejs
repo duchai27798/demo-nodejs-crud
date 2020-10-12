@@ -8,6 +8,7 @@
 <div class="min-vh-100 d-flex justify-content-center align-items-center">
     <form action="/register" method="post" class="login-form">
         <h3 class="size-22 font-weight-bolder text-center m-b-20">Register Account</h3>
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
         <div class="form-group">
             <label for="input-name" class="size-14 font-weight-bold">Full Name</label>
             <input type="text" class="form-control" name="full_name" id="input-name" value="<%= get(content, 'full_name.value') %>" placeholder="Nguyen Van A">

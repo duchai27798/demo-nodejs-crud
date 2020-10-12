@@ -7,27 +7,10 @@
  * @author hainguyen <hainguyen27798@gmail.com>
  *
  */
-import express from 'express';
-import { validateRegister } from '../validators/register.validate';
-import { AuthController } from '../controllers/auth.controller';
+import webRouter from './web.route';
+import apiRouter from './api.route';
 
-const router = express.Router();
-
-router.get('/', (req, res) => {
-    console.log(req.cookies.auth);
-    res.render('home');
-});
-
-router.get('/login', (req, res) => {
-    res.render('login', { errors: req.session.errors || null });
-});
-
-router.post('/login', AuthController.login);
-
-router.get('/register', (req, res) => {
-    res.render('register', { content: req.session.content || null });
-});
-
-router.post('/register', validateRegister(), AuthController.register);
-
-export default router;
+export function activeRoute(app) {
+    app.use('/', webRouter);
+    app.use('/api', apiRouter);
+}
