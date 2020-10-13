@@ -10,23 +10,25 @@
 
 import { User } from '../../models';
 import bcrypt from 'bcrypt';
-import {registerService} from "../../services/register.service";
+import { registerService } from '../../services/register.service';
 
 export class AuthController {
     public static register = (req, res) => {
         return res.render('register', { content: req.session.content || null });
-    }
+    };
 
     public static handleRegister = (req, res) => {
-        registerService(req, res, data => {
-            req.session.content = data;
-            res.
-        }, )
+        registerService(req, res, (data) => {
+            return res.redirect('/login');
+        }, error => {
+            req.session.content = error;
+            return res.redirect('/register');
+        });
     };
 
     public static login = (req, res) => {
         return res.render('login', { errors: req.session.errors || null });
-    }
+    };
 
     public static handleLogin = (req, res) => {
         /* Get user by email */

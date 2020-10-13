@@ -8,10 +8,10 @@
  *
  */
 
-import {validationResult} from "express-validator";
-import _ from "lodash";
-import bcrypt from "bcrypt";
-import {User} from "../models";
+import { validationResult } from 'express-validator';
+import _ from 'lodash';
+import bcrypt from 'bcrypt';
+import { User } from '../models';
 
 /**
  * Handle register
@@ -20,7 +20,7 @@ import {User} from "../models";
  * @param success
  * @param failure
  * */
-export function registerService(req, res, success = data => {}, failure = error => {} ) {
+export function registerService(req, res, success = (data) => {}, failure = (error) => {}) {
     /* Get validate errors */
     const errors = validationResult(req).array() || [];
     const errorObject = {};
@@ -58,13 +58,11 @@ export function registerService(req, res, success = data => {}, failure = error 
                 password: hash,
             });
 
-            user.save().then(
-                (data) => console.log(data),
-                (err) => console.log(err)
+            return user.save().then(
+                (data) => success(true),
+                (err) => failure(err)
             );
         },
-        (err) => console.log(err)
+        (err) => failure(err)
     );
-
-    return success(true);
 }

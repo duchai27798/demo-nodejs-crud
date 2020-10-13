@@ -9,9 +9,38 @@
  */
 
 import { User } from '../../models';
-import { validationResult } from 'express-validator';
+import { registerService } from '../../services/register.service';
 
 export class UserController {
+    /**
+     * Get all user with pagination
+     * @default limit = 5, skip = 0
+     * @param req
+     * @param res
+     */
+    public static getAll(req, res) {
+        const skip = req.params['page'] > 0 ? (req.params['page'] - 1) * req.params['limit'] : 0;
+        User.find({})
+            .limit(req.params['limit']++ || 5)
+            .skip(skip)
+            .then((users) => {
+                const listUsers = users.map((user) => ({
+                    _id: user['_id'],
+                    full_name: user['full_name'],
+                    is_active: user['is_active'],
+                    email: user['email'],
+                }));
+
+                User.countDocuments((err, count) => {
+                    res.json({
+                        listUsers,
+                        size: count,
+                        page: req.params['page']++,
+                    });
+                });
+            });
+    }
+
     /**
      * Get user by id
      * @param req
@@ -48,6 +77,15 @@ export class UserController {
      * @param res
      */
     public static create(req, res) {
-        return res.json(validationResult(req));
+        registerService(
+            req,
+            res,
+            (data) => {
+                res.json({ success: true });
+            },
+            (error) => {
+                res.json({ success: false, error });
+            }
+        );
     }
 }

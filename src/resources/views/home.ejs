@@ -13,28 +13,84 @@
                 <th scope="col">Action</th>
             </tr>
         </thead>
-        <tbody>
-            <% if (listUsers) { %>
-                <% listUsers.forEach(user => { %>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td><%= get(user, 'full_name') %></td>
-                        <td><%= get(user, 'email') %></td>
-                        <td><%= get(user, 'is_active') %></td>
-                        <td>
-                            <div>
-                                <i class="far fa-edit size-18 text-primary pointer"
-                                   data-toggle="modal"
-                                   data-id="<%= get(user, '_id') %>"
-                                   data-target="#user-editor-dialog">
-                                </i>
-                                <i class="far fa-trash-alt size-18 text-danger ml-3"></i>
-                            </div>
-                        </td>
-                    </tr>
-                <% }) %>
-            <% } %>
+        <tbody id="table-body">
+
         </tbody>
     </table>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-end">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <div class="d-flex" id="pagination">
+            </div>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
     <%- include('dialogs/user-editor-dialog') %>
 </div>
+
+<script>
+    let limit = 3;
+    loadData(limit, 1);
+
+    function loadData(limit = 3, page = 1) {
+        $.ajax({
+            url: `/api/users/${limit}/${page}`,
+            method: 'get',
+            success: function (data) {
+                const bodyContent = $('#table-body');
+                const listUsers = data.listUsers;
+
+                bodyContent.empty();
+                loadPagination(limit, data['size'], page);
+
+                listUsers.forEach((user, index) => {
+                    const row = $(`
+                        <tr>
+                            <td>${ index + 1 + (page - 1) * limit }</td>
+                            <td>${ user['full_name'] }</td>
+                            <td>${ user['email'] }</td>
+                            <td>${ user['is_active'] }</td>
+                            <td>
+                                <div>
+                                    <i class="far fa-edit size-18 text-primary pointer"
+                                       data-toggle="modal"
+                                       data-id="${ user['_id'] }"
+                                       data-target="#user-editor-dialog">
+                                    </i>
+                                    <i class="far fa-trash-alt size-18 text-danger ml-3 pointer"></i>
+                                </div>
+                           </td>
+                        </tr>
+                    `);
+                    bodyContent.append(row);
+                });
+            }
+        });
+    }
+
+    function loadPagination(limit = 0, length = 0, page = 1) {
+        const pagination = $('#pagination');
+        pagination.empty();
+
+        if (limit) {
+            let numPage = length / limit;
+
+            for (let i = 0; i < numPage; i++) {
+                const item = $(`
+                    <li class="page-item pointer ${ page === i + 1 ? 'active' : '' }">
+                        <a class="page-link" onclick="loadData(limit, ${ i + 1 })">${ i + 1 }</a>
+                    </li>
+                `);
+                pagination.append(item);
+            }
+        }
+    }
+</script>
