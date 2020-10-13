@@ -1,0 +1,20 @@
+<% if (listUsers) { %>
+    <% listUsers.forEach((user, index) => { %>
+        <tr>
+            <th scope="row"><%= index + 1 %></th>
+            <td><%= get(user, 'full_name') %></td>
+            <td><%= get(user, 'email') %></td>
+            <td><%= get(user, 'is_active') %></td>
+            <td>
+                <div>
+                    <i class="far fa-edit size-18 text-primary pointer"
+                       data-toggle="modal"
+                       data-id="<%= get(user, '_id') %>"
+                       data-target="#user-editor-dialog">
+                    </i>
+                    <i class="far fa-trash-alt size-18 text-danger ml-3"></i>
+                </div>
+            </td>
+        </tr>
+    <% }) %>
+<% } %>
