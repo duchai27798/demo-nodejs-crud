@@ -1,0 +1,45 @@
+/**
+ *
+ * @copyright Nitro Tech Asia Inc. 2020
+ *
+ * @author hainguyen <hainguyen27798@gmail.com>
+ *
+ */
+
+$sizes: 10, 15, 20, 30, 40;
+
+@each $size in $sizes {
+    /* Generate Margin */
+    .m-l-#{$size} {
+        margin-left: #{$size}px;
+    }
+
+    .m-r-#{$size} {
+        margin-right: #{$size}px;
+    }
+
+    .m-t-#{$size} {
+        margin-top: #{$size}px;
+    }
+
+    .m-b-#{$size} {
+        margin-bottom: #{$size}px;
+    }
+
+    /* Generate Padding */
+    .p-l-#{$size} {
+        padding-left: #{$size}px;
+    }
+
+    .p-r-#{$size} {
+        padding-right: #{$size}px;
+    }
+
+    .p-t-#{$size} {
+        padding-top: #{$size}px;
+    }
+
+    .p-b-#{$size} {
+        padding-bottom: #{$size}px;
+    }
+}

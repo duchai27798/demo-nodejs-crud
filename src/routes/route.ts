@@ -7,12 +7,10 @@
  * @author hainguyen <hainguyen27798@gmail.com>
  *
  */
-import express from 'express';
+import webRouter from './web.route';
+import apiRouter from './api.route';
 
-const router = express.Router();
-
-router.get('/', (req, res) => {
-    res.render('home');
-});
-
-export default router;
+export function activeRoute(app) {
+    app.use('/', webRouter);
+    app.use('/api', apiRouter);
+}

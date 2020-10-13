@@ -1,3 +1,40 @@
 <%- contentFor('content') %>
-
-<h1>home</h1>
+<%- include('layouts/menu-header') %>
+<div class="container">
+    <h1 class="text-center mb-5 mt-5">User Management</h1>
+    <button class="btn btn-success mb-3" data-toggle="modal" data-target="#user-editor-dialog">Create User</button>
+    <table class="table">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Full Name</th>
+                <th scope="col">Email</th>
+                <th scope="col">Active</th>
+                <th scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (listUsers) { %>
+                <% listUsers.forEach(user => { %>
+                    <tr>
+                        <th scope="row">1</th>
+                        <td><%= get(user, 'full_name') %></td>
+                        <td><%= get(user, 'email') %></td>
+                        <td><%= get(user, 'is_active') %></td>
+                        <td>
+                            <div>
+                                <i class="far fa-edit size-18 text-primary pointer"
+                                   data-toggle="modal"
+                                   data-id="<%= get(user, '_id') %>"
+                                   data-target="#user-editor-dialog">
+                                </i>
+                                <i class="far fa-trash-alt size-18 text-danger ml-3"></i>
+                            </div>
+                        </td>
+                    </tr>
+                <% }) %>
+            <% } %>
+        </tbody>
+    </table>
+    <%- include('dialogs/user-editor-dialog') %>
+</div>
