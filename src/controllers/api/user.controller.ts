@@ -75,6 +75,7 @@ export class UserController {
      * @returns { success, error }
      */
     public static update(req, res) {
+        console.log(req.body);
         return User.updateOne({ _id: req.body._id }, { full_name: req.body.full_name })
             .then((data) => {
                 return res.json({ success: true });

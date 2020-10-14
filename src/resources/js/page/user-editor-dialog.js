@@ -47,6 +47,11 @@ $('#user-editor-form').submit(e => {
         formData[field.name] = field.value;
     });
 
+    if (imageFile) {
+        console.log(imageFile);
+        // formData['image'] = imageFile;
+    }
+
     let action = 'update';
 
     /* remove _id when create because it is null */
@@ -60,6 +65,9 @@ $('#user-editor-form').submit(e => {
         url: `/api/users/${action}`,
         method: 'post',
         data: formData,
+        headers: {
+            'csrf-token': $('meta[name="_csrf"]').attr('content')
+        },
         success: function (data) {
             if (data['success']) {
                 /* reload and close user editor dialog */

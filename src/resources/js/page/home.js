@@ -1,5 +1,6 @@
 let limit = 3;
 let currentPage = 1;
+let currentSearchBy = '';
 let numPage = 1;
 
 /* load data in the first time */
@@ -9,11 +10,10 @@ loadData(limit, 1);
  * show data in table
  * @param limit: number of item
  * @param page: index page
- * @param searchBy
  */
-function loadData(limit = 3, page = 1, searchBy = '') {
+function loadData(limit = 3, page = 1) {
     $.ajax({
-        url: `/api/users/${limit}/${page}/${searchBy}`,
+        url: `/api/users/${limit}/${page}/${currentSearchBy}`,
         method: 'get',
         success: function (data) {
             const bodyContent = $('#table-body');
@@ -32,6 +32,7 @@ function loadData(limit = 3, page = 1, searchBy = '') {
                 const row = $(`
                     <tr>
                         <td>${index + 1 + (page - 1) * limit}</td>
+                        <td></td>
                         <td>${user['full_name']}</td>
                         <td>${user['email']}</td>
                         <td>${user['is_active']}</td>
@@ -127,7 +128,8 @@ function deleteUser(id = null) {
 }
 
 function searchUser() {
-    loadData(limit, 1, $('#input-search').val());
+    currentSearchBy = $('#input-search').val();
+    loadData(limit, 1);
 }
 
 $('#input-search').on('keypress', function (e) {
