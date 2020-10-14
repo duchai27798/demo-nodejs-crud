@@ -9,10 +9,11 @@ loadData(limit, 1);
  * show data in table
  * @param limit: number of item
  * @param page: index page
+ * @param searchBy
  */
-function loadData(limit = 3, page = 1) {
+function loadData(limit = 3, page = 1, searchBy = '') {
     $.ajax({
-        url: `/api/users/${limit}/${page}`,
+        url: `/api/users/${limit}/${page}/${searchBy}`,
         method: 'get',
         success: function (data) {
             const bodyContent = $('#table-body');
@@ -41,7 +42,9 @@ function loadData(limit = 3, page = 1) {
                                    data-id="${user['_id']}"
                                    data-target="#user-editor-dialog">
                                 </i>
-                                <i class="far fa-trash-alt size-18 text-danger ml-3 pointer"></i>
+                                <i class="far fa-trash-alt size-18 text-danger ml-3 pointer"
+                                   onclick="deleteUser('${user['_id']}')">
+                                </i>
                             </div>
                        </td>
                     </tr>
@@ -64,15 +67,19 @@ function loadPagination(limit = 0, length = 0, page = 1) {
 
     if (limit) {
         /* compute number of page */
-        numPage = Math.round(length / limit + 0.5);
+        numPage = Math.ceil(length / limit);
+
+        if (currentPage > numPage) {
+            loadData(limit, currentPage - 1);
+        }
 
         /* render item  */
         for (let i = 0; i < numPage; i++) {
             const item = $(`
-                    <li class="page-item pointer ${page === i + 1 ? 'active' : ''}">
-                        <a class="page-link" onclick="loadData(limit, ${i + 1})">${i + 1}</a>
-                    </li>
-                `);
+                <li class="page-item pointer ${page === i + 1 ? 'active' : ''}">
+                    <a class="page-link" onclick="loadData(limit, ${i + 1})">${i + 1}</a>
+                </li>
+            `);
             pagination.append(item);
         }
     }
@@ -97,3 +104,34 @@ function chooseSize(e) {
     limit = e.value;
     loadData(limit);
 }
+
+/**
+ * delete user by id
+ * @param id: user's id
+ */
+function deleteUser(id = null) {
+    confirmDialog((status) => {
+        if (status) {
+            $.ajax({
+                url: `/api/users/${id}/delete`,
+                method: 'delete',
+                data: {
+                    _csrf: $('meta[name="_csrf"]').attr('content'),
+                },
+                success: function (data) {
+                    loadData(limit, currentPage);
+                },
+            });
+        }
+    });
+}
+
+function searchUser() {
+    loadData(limit, 1, $('#input-search').val());
+}
+
+$('#input-search').on('keypress', function (e) {
+    if (e.which === 13) {
+        searchUser();
+    }
+});

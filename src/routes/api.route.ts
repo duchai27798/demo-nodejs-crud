@@ -17,10 +17,12 @@ const apiRouter = express.Router();
 
 apiRouter.get('/users/:id', UserController.index);
 
-apiRouter.get('/users/:limit/:page', UserController.getAll);
+apiRouter.get('/users/:limit/:page/:searchBy?', UserController.getAll);
 
 apiRouter.post('/users/update', UserController.update);
 
 apiRouter.post('/users/create', generatePassword, validateRegister(), UserController.create);
+
+apiRouter.delete('/users/:id/delete', UserController.deleteById);
 
 export default apiRouter;

@@ -1,0 +1,17 @@
+<!-- Confirm Modal -->
+<div class="modal fade" id="confirm-dialog" tabindex="-1" role="dialog" aria-labelledby="confirm-delete-user-modal-label" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title font-weight-bold" id="confirm-delete-user-modal-label">Confirm Delete User</h5>
+            </div>
+            <div class="modal-body">
+                <h3 class="size-18">Do you want to delete?</h3>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="emit(false)">Close</button>
+                <button type="button" class="btn btn-danger" onclick="emit(true)">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
