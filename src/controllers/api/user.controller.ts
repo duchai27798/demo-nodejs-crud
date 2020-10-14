@@ -20,7 +20,18 @@ export class UserController {
      */
     public static getAll(req, res) {
         const skip = req.params['page'] > 0 ? (req.params['page'] - 1) * req.params['limit'] : 0;
-        User.find({})
+        let searchBy = {};
+
+        if (req.params.searchBy) {
+            searchBy = {
+                $or: [
+                    { full_name: { $regex: req.params.searchBy, $options: 'i' } },
+                    { email: { $regex: req.params.searchBy, $options: 'i' } },
+                ],
+            };
+        }
+
+        User.find(searchBy)
             .limit(req.params['limit']++ || 5)
             .skip(skip)
             .then((users) => {
@@ -31,7 +42,7 @@ export class UserController {
                     email: user['email'],
                 }));
 
-                User.countDocuments((err, count) => {
+                User.count(searchBy, (err, count) => {
                     res.json({
                         listUsers,
                         size: count,
@@ -86,6 +97,18 @@ export class UserController {
             (error) => {
                 res.json({ success: false, error });
             }
+        );
+    }
+
+    /**
+     * delete user by id
+     * @param req
+     * @param res
+     */
+    public static deleteById(req, res) {
+        User.deleteOne({ _id: req.params.id }).then(
+            (data) => res.json(data),
+            (err) => res.json(err)
         );
     }
 }
