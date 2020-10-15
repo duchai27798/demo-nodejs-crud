@@ -38,6 +38,12 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false,
     },
+    reset_password: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'ResetPassword',
+        },
+    ],
 });
 
 export default mongoose.model('User', userSchema);
