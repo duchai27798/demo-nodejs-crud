@@ -31,6 +31,9 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    src_img: {
+        type: String,
+    },
     is_active: {
         type: Boolean,
         default: false,

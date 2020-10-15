@@ -12,8 +12,23 @@ import express from 'express';
 import { UserController } from '../controllers/api/user.controller';
 import { validateRegister } from '../validators/validate';
 import { generatePassword } from '../middlewares/generate-password.middleware';
+import multer from 'multer';
+import uuid from 'uuid';
+import { UploadFileController } from '../controllers/api/upload-file.controller';
 
 const apiRouter = express.Router();
+
+/* setting upload directory and filename  */
+const storage = multer.diskStorage({
+    destination: 'src/resources/uploads/',
+    filename: (req, file, callback) => {
+        if (file['originalname'] !== 'new') {
+            callback(null, file['originalname']);
+        } else {
+            callback(null, uuid());
+        }
+    }
+})
 
 apiRouter.get('/users/:id', UserController.index);
 
@@ -24,5 +39,7 @@ apiRouter.post('/users/update', UserController.update);
 apiRouter.post('/users/create', generatePassword, validateRegister(), UserController.create);
 
 apiRouter.delete('/users/:id/delete', UserController.deleteById);
+
+apiRouter.post('/files/upload', multer({ storage }).single('image'), UploadFileController.uploadFile);
 
 export default apiRouter;

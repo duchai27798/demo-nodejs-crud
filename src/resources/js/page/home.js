@@ -32,7 +32,7 @@ function loadData(limit = 3, page = 1) {
                 const row = $(`
                     <tr>
                         <td>${index + 1 + (page - 1) * limit}</td>
-                        <td></td>
+                        <td><img class="img" src="${ user['src_img'] || 'images/avatar.jpg' }"></td>
                         <td>${user['full_name']}</td>
                         <td>${user['email']}</td>
                         <td>${user['is_active']}</td>

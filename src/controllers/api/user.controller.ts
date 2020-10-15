@@ -10,6 +10,7 @@
 
 import { User } from '../../models';
 import { registerService } from '../../services/register.service';
+import {UploadFileController} from "./upload-file.controller";
 
 export class UserController {
     /**
@@ -19,9 +20,11 @@ export class UserController {
      * @param res
      */
     public static getAll(req, res) {
+        /* config skip how many document */
         const skip = req.params['page'] > 0 ? (req.params['page'] - 1) * req.params['limit'] : 0;
         let searchBy = {};
 
+        /* add search query */
         if (req.params.searchBy) {
             searchBy = {
                 $or: [
@@ -31,16 +34,12 @@ export class UserController {
             };
         }
 
+        /* find user */
         User.find(searchBy)
             .limit(req.params['limit']++ || 5)
             .skip(skip)
             .then((users) => {
-                const listUsers = users.map((user) => ({
-                    _id: user['_id'],
-                    full_name: user['full_name'],
-                    is_active: user['is_active'],
-                    email: user['email'],
-                }));
+                const listUsers = users.map(UserController.userObject);
 
                 User.count(searchBy, (err, count) => {
                     res.json({
@@ -59,12 +58,23 @@ export class UserController {
      */
     public static index(req, res) {
         User.findById(req.params.id).then((user) => {
-            res.json({
-                _id: user['_id'],
-                email: user['email'],
-                full_name: user['full_name'],
-            });
+            res.json(UserController.userObject(user));
         });
+    }
+
+    /**
+     * transfer user data to user pattern
+     * @param user
+     * @returns {{full_name: any, is_active: any, _id: any, src_img: string, email: any}}
+     */
+    private static userObject(user) {
+        return {
+            _id: user['_id'],
+            email: user['email'],
+            full_name: user['full_name'],
+            src_img: `${user['src_img'] ? 'uploads/' + user['src_img'] : ''}`,
+            is_active: user['is_active'],
+        };
     }
 
     /**
@@ -75,9 +85,19 @@ export class UserController {
      * @returns { success, error }
      */
     public static update(req, res) {
-        console.log(req.body);
-        return User.updateOne({ _id: req.body._id }, { full_name: req.body.full_name })
+        const docUpdate = {
+            full_name: req.body.full_name,
+        };
+
+        /* if src_img is existed then update src_img */
+        if (req.body.src_img) {
+            docUpdate['src_img'] = req.body.src_img;
+        }
+
+        /* update user */
+        return User.updateOne({ _id: req.body._id }, docUpdate)
             .then((data) => {
+                console.log(data);
                 return res.json({ success: true });
             })
             .catch((error) => res.json({ success: false, error }));
@@ -96,6 +116,7 @@ export class UserController {
                 res.json({ success: true });
             },
             (error) => {
+                UploadFileController.removeFile(req.body.src_img);
                 res.json({ success: false, error });
             }
         );

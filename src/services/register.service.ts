@@ -58,6 +58,8 @@ export function registerService(req, res, success = (data) => {}, failure = (err
                 password: hash,
             });
 
+            console.log(user)
+
             return user.save().then(
                 (data) => success(true),
                 (err) => failure(err)
