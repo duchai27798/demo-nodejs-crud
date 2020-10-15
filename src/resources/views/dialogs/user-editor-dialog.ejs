@@ -5,9 +5,9 @@
             <div class="modal-header">
                 <h5 class="modal-title" id="user-editor-dialog-label"></h5>
             </div>
-            <form class="modal-body" id="user-editor-form">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <form class="modal-body" id="user-editor-form" enctype="multipart/form-data">
                 <input type="hidden" id="input-id" name="_id">
+                <input type="hidden" id="input-src-img" name="src_img">
                 <div class="form-group">
                     <label for="input-name" class="size-14 font-weight-bold">Full Name</label>
                     <input type="text" class="form-control" name="full_name" id="input-name" placeholder="Nguyen Van A">
@@ -17,6 +17,14 @@
                     <label for="input-email" class="size-14 font-weight-bold">Email address</label>
                     <input type="email" class="form-control" id="input-email" name="email" placeholder="name@example.com">
                     <div class="text-danger" id="email-error"></div>
+                </div>
+                <div class="form-group">
+                    <label class="size-14 font-weight-bold m-b-20">Upload Avatar</label>
+                    <div>
+                        <label for="input-file" class="btn btn-success">Choose File</label>
+                        <input type="file" class="d-none" id="input-file" name="image">
+                    </div>
+                    <div id="preview-img" class="d-flex justify-content-center"></div>
                 </div>
             </form>
             <div class="modal-footer">
@@ -28,3 +36,4 @@
 </div>
 
 <script src="js/page/user-editor-dialog.js"></script>
+<script src="js/components/upload-avatar.js"></script>
