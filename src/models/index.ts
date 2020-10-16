@@ -1,3 +1,4 @@
 import User from './user.model';
+import Verify from './verify.model';
 
-export { User };
+export { User, Verify };

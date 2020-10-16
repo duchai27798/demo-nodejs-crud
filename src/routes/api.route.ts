@@ -15,6 +15,9 @@ import { generatePassword } from '../middlewares/generate-password.middleware';
 import multer from 'multer';
 import uuid from 'uuid';
 import { UploadFileController } from '../controllers/api/upload-file.controller';
+import { AuthController } from '../controllers/api/auth.controller';
+import { validateEmail } from '../validators/email.validator';
+import {validateVerify} from "../validators/verify.validator";
 
 const apiRouter = express.Router();
 
@@ -27,8 +30,8 @@ const storage = multer.diskStorage({
         } else {
             callback(null, uuid());
         }
-    }
-})
+    },
+});
 
 apiRouter.get('/users/:id', UserController.index);
 
@@ -40,6 +43,14 @@ apiRouter.post('/users/create', generatePassword, validateRegister(), UserContro
 
 apiRouter.delete('/users/:id/delete', UserController.deleteById);
 
-apiRouter.post('/files/upload', multer({ storage }).single('image'), UploadFileController.uploadFile);
+apiRouter.post(
+    '/files/upload',
+    multer({ storage }).single('image'),
+    UploadFileController.uploadFile
+);
+
+apiRouter.post('/send-verify-token', validateEmail(), AuthController.sendVerifyToken);
+
+apiRouter.post('/verify-email', validateEmail(), validateVerify(), AuthController.verifyHandle);
 
 export default apiRouter;

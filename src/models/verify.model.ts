@@ -10,20 +10,20 @@
 
 import { mongoose } from '../utils/database-connection';
 
-const resetPasswordSchema = new mongoose.Schema({
-    _id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
+const verifySchema = new mongoose.Schema({
+    email: {
+        type: String,
         required: true,
     },
     code: {
         type: String,
         required: true,
     },
-    created_at: {
+    expired_at: {
         type: Date,
-        default: Date.now()
-    }
-})
+        default: new Date(Date.now() + 10 * 60 * 1000),
+        required: true,
+    },
+});
 
-export default mongoose.model('ResetPassword', resetPasswordSchema);
+export default mongoose.model('Verify', verifySchema);

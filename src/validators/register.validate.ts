@@ -12,7 +12,7 @@ import { check } from 'express-validator';
 import _ from 'lodash';
 import { User } from '../models';
 
-export const validateRegister = () => {
+export function validateRegister() {
     return [
         check('full_name').not().isEmpty().withMessage('Full name does not Empty'),
         check('email')

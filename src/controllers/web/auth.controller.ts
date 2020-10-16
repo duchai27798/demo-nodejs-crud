@@ -13,24 +13,52 @@ import bcrypt from 'bcrypt';
 import { registerService } from '../../services/register.service';
 
 export class AuthController {
-    public static register = (req, res) => {
+    /**
+     * show register page
+     * @param req
+     * @param res
+     * @returns {any}
+     */
+    public static register(req, res) {
         return res.render('register', { content: req.session.content || null });
-    };
+    }
 
-    public static handleRegister = (req, res) => {
-        registerService(req, res, (data) => {
-            return res.redirect('/login');
-        }, error => {
-            req.session.content = error;
-            return res.redirect('/register');
-        });
-    };
+    /**
+     * handle register
+     * @param req
+     * @param res
+     */
+    public static handleRegister(req, res) {
+        registerService(
+            req,
+            res,
+            (data) => {
+                return res.redirect('/login');
+            },
+            (error) => {
+                req.session.content = error;
+                return res.redirect('/register');
+            }
+        );
+    }
 
-    public static login = (req, res) => {
+    /**
+     * show login page
+     * @param req
+     * @param res
+     * @returns {any}
+     */
+    public static login(req, res) {
         return res.render('login', { errors: req.session.errors || null });
-    };
+    }
 
-    public static handleLogin = (req, res) => {
+    /**
+     * handle login
+     * @param req
+     * @param res
+     * @returns {any}
+     */
+    public static handleLogin(req, res) {
         /* Get user by email */
         return User.findOne({ email: req.body.email }).then((user) => {
             /* If user is exited, check password */
@@ -57,11 +85,34 @@ export class AuthController {
 
             return AuthController.loginFailed(req, res);
         });
-    };
+    }
 
-    private static loginFailed = (req, res) => {
+    /**
+     * when login is failed then push error for login
+     * @param req
+     * @param res
+     * @returns {any}
+     */
+    private static loginFailed(req, res) {
         req.session.errors = 'User or password is wrong';
 
         return res.redirect('/login');
-    };
+    }
+
+    public static resetPassword(req, res) {
+        return res.render('reset-password');
+    }
+
+    /**
+     * show verify email page
+     * @param req
+     * @param res
+     * @returns {any}
+     */
+    public static verifyEmail(req, res) {
+        return res.render('verify-email', {
+            errors: req.session.errors,
+            email: req.session.email,
+        });
+    }
 }
