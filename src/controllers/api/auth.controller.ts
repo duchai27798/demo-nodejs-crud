@@ -14,7 +14,7 @@ import { sendEmail } from '../../helpers/send-email.helper';
 import { generateCodeToken } from '../../helpers/generate-code-token.helper';
 import { User, Verify } from '../../models';
 import _ from 'lodash';
-import {UserObjectService} from "../../services/user-object.service";
+import { UserObjectService } from '../../services/user-object.service';
 
 export class AuthController {
     /**
@@ -34,20 +34,28 @@ export class AuthController {
 
         const code = generateCodeToken();
 
-        sendEmail(req.body.email, 'Reset Password', `Code: ${code}`, null, (err, info) => {
-            if (err) {
-                console.log(err);
-            } else {
-                Verify.deleteOne({ email: req.body.email }).then((data) => {
-                    const verify = new Verify({
-                        email: req.body.email,
-                        code,
-                    });
+        sendEmail(
+            req.body.email,
+            'Reset Password',
+            'token-verify-email.html',
+            {
+                code,
+            },
+            (err, info) => {
+                if (err) {
+                    console.log(err);
+                } else {
+                    Verify.deleteOne({ email: req.body.email }).then((data) => {
+                        const verify = new Verify({
+                            email: req.body.email,
+                            code,
+                        });
 
-                    verify.save();
-                });
+                        verify.save();
+                    });
+                }
             }
-        });
+        );
 
         return res.json({ success: true });
     }
@@ -80,7 +88,7 @@ export class AuthController {
      * @param res
      */
     public static getCurrentUser(req, res) {
-        User.findOne({ email: _.get(req, 'cookies.auth.email') }).then(user => {
+        User.findOne({ email: _.get(req, 'cookies.auth.email') }).then((user) => {
             res.json(UserObjectService.convert(user));
         });
     }
