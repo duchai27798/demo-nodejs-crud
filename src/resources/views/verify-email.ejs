@@ -11,7 +11,7 @@
             <label class="size-14 font-weight-bold">Email address</label>
             <div class="d-flex">
                 <input type="email" class="form-control" id="input-email-verify" name="email" value="<%= email %>" placeholder="name@example.com">
-                <button class="btn btn-secondary w-100 btn-send-code ml-3" type="button" onclick="sendVerifyToken()">Send</button>
+                <button class="btn btn-secondary w-100 btn-send-code ml-3" type="button" id="btn-send-verify-token" onclick="sendVerifyToken()">Send</button>
             </div>
             <div class="text-danger" id="email-error"></div>
         </div>
@@ -20,7 +20,8 @@
             <input type="text" class="form-control" id="input-code-token" placeholder="Abc123">
             <div class="text-danger" id="code-token-error"></div>
         </div>
-        <button class="btn btn-success w-100 m-t-20" type="button" onclick="verifyHandle()">Verify</button>
+        <button class="btn btn-success w-100 m-t-20 m-b-10" type="button" onclick="verifyHandle()">Verify</button>
+        <a href="/logout" class="text-primary btn w-100">Logout</a>
     </form>
 </div>
 

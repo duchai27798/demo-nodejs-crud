@@ -13,6 +13,24 @@ function sendVerifyToken() {
                 $('#email-error').text(_.get(data, 'error.email.msg'));
             } else {
                 $('#email-error').text('');
+
+                let timeLeft = 60;
+
+                $('#btn-send-verify-token').addClass('disabled-half');
+                $('#btn-send-verify-token').text(`${timeLeft}s`);
+
+                const countdown = setInterval(function () {
+                    timeLeft--;
+
+                    if (timeLeft < 0) {
+                        $('#btn-send-verify-token').text('Send');
+                        $('#btn-send-verify-token').removeClass('disabled-half');
+                        clearInterval(countdown);
+                        return;
+                    }
+
+                    $('#btn-send-verify-token').text(`${timeLeft}s`);
+                }, 1000)
             }
         },
     });
