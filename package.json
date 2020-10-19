@@ -32,6 +32,7 @@
     },
     "dependencies": {
         "@types/csurf": "^1.9.36",
+        "@types/handlebars": "^4.1.0",
         "@types/multer": "^1.4.4",
         "@types/nodemailer": "^6.4.0",
         "bcrypt": "^5.0.0",
@@ -44,6 +45,8 @@
         "express-ejs-layouts": "^2.5.0",
         "express-session": "^1.17.1",
         "express-validator": "^6.6.1",
+        "handlebars": "^4.7.6",
+        "jsonwebtoken": "^8.5.1",
         "lodash": "^4.17.20",
         "mongoose": "^5.10.8",
         "morgan": "^1.10.0",

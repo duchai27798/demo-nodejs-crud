@@ -34,7 +34,7 @@ export class AuthController {
 
         const code = generateCodeToken();
 
-        sendEmail(req.body.email, 'Reset Password', `Code: ${code}`, (err, info) => {
+        sendEmail(req.body.email, 'Reset Password', `Code: ${code}`, null, (err, info) => {
             if (err) {
                 console.log(err);
             } else {

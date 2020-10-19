@@ -8,9 +8,13 @@
  *
  */
 
-import { User } from '../../models';
+import { ResetPassword, User } from '../../models';
 import bcrypt from 'bcrypt';
 import { registerService } from '../../services/register.service';
+import { validationResult } from 'express-validator';
+import { convertFormatErrors } from '../../helpers/convert-format-errors.helper';
+import { sendEmail } from '../../helpers/send-email.helper';
+import { generateCodeToken } from '../../helpers/generate-code-token.helper';
 
 export class AuthController {
     /**
@@ -99,8 +103,121 @@ export class AuthController {
         return res.redirect('/login');
     }
 
+    /**
+     * show reset password page
+     * @param req
+     * @param res
+     * @returns {any}
+     */
     public static resetPassword(req, res) {
-        return res.render('reset-password');
+        return res.render('reset-password', {
+            content: req.session.content || '',
+            email: req.session.email || '',
+        });
+    }
+
+    /**
+     * send link reset password to email
+     * @param req
+     * @param res
+     * @returns {any}
+     */
+    public static sendLinkResetPassword(req, res) {
+        /* Get validate errors */
+        const errors = validationResult(req).array() || [];
+        const contentObject = convertFormatErrors(req.body, errors);
+
+        /* if errors then push error to view */
+        if (contentObject) {
+            req.session.content = contentObject;
+            return res.redirect('/reset-password');
+        }
+
+        const token = generateCodeToken(60);
+
+        /* save token to db */
+        ResetPassword.findOneAndUpdate(
+            { email: req.body.email },
+            {
+                email: req.body.email,
+                token,
+                expired_at: new Date(Date.now() + 60 * 60 * 1000),
+            },
+            { upsert: true, new: true, setDefaultsOnInsert: true },
+            (err, doc) => {
+                console.log(err);
+                console.log(doc);
+            }
+        );
+
+        /* send link to email */
+        sendEmail(
+            req.body.email,
+            'Reset Password',
+            'reset-password.html',
+            {
+                link: `http://localhost:${process.env.PORT}/reset-password/${token}`,
+            },
+            (err, info) => {
+                console.log(`success: ${info}`);
+                console.log(`errors: ${err}`);
+            }
+        );
+
+        return res.redirect('/login');
+    }
+
+    /**
+     * check link reset password has been existed and is it still expiry date
+     * @param req
+     * @param res
+     */
+    public static verifyLinkResetPassword(req, res) {
+        /* Get validate errors */
+        const errors = validationResult(req).array() || [];
+        const contentObject = convertFormatErrors(req.body, errors);
+
+        /* if errors then push error to view */
+        if (contentObject) {
+            return res.redirect('/forbidden');
+        }
+
+        res.render('form-reset-password', {
+            content: contentObject,
+            email: req.body.email || null,
+        });
+    }
+
+    /**
+     * change password for account
+     * @param req
+     * @param res
+     */
+    public static handleResetPassword(req, res) {
+        /* Get validate errors */
+        const errors = validationResult(req).array() || [];
+        const contentObject = convertFormatErrors(req.body, errors);
+
+        /* if errors then push error to view */
+        if (contentObject) {
+            res.render('form-reset-password', {
+                content: contentObject,
+                email: req.body.email || null,
+            });
+        }
+
+        /* Encrypt password and save user */
+        bcrypt.hash(req.body.password, 10).then((hash) => {
+            return User.findOneAndUpdate(
+                { email: req.body.email },
+                {
+                    password: hash,
+                }
+            );
+        }).then(value => {
+            console.log(value);
+            res.redirect('/login');
+        });
     }
 
     /**
@@ -116,6 +233,12 @@ export class AuthController {
         });
     }
 
+    /**
+     * handle logout
+     * @param req
+     * @param res
+     * @returns {any}
+     */
     public static logout(req, res) {
         res.cookie('auth', { maxAge: Date.now() });
 

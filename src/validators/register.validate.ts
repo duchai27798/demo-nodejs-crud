@@ -41,4 +41,4 @@ export function validateRegister() {
             })
             .withMessage('Not match with password'),
     ];
-};
+}

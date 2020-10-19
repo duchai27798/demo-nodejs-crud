@@ -9,6 +9,8 @@
  */
 
 import nodemailer from 'nodemailer';
+import fs from 'fs';
+import handlebars from 'handlebars';
 
 const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
@@ -25,17 +27,27 @@ const transporter = nodemailer.createTransport({
  *
  * @param emailTo
  * @param subject: email title
- * @param text: email content
+ * @param htmlFile
+ * @param data
  * @param callback: callback action
  */
-export function sendEmail(emailTo, subject, text, callback = (err, info) => {}) {
-    const mailOptions = {
-        from: process.env.GMAIL_ADDRESS,
-        to: emailTo,
-        subject,
-        text,
-    };
+export function sendEmail(emailTo, subject, htmlFile, data, callback = (err, info) => {}) {
+    readEmailTemplate(`${__dirname}/../resources/email-template/${htmlFile}`, null, (err, html) => {
+        const template = handlebars.compile(html);
+        const htmlToSend = template(data);
 
-    /* send */
-    transporter.sendMail(mailOptions, callback);
+        const mailOptions = {
+            from: process.env.GMAIL_ADDRESS,
+            to: emailTo,
+            subject,
+            html: htmlToSend,
+        };
+
+        /* send */
+        transporter.sendMail(mailOptions, callback);
+    });
+}
+
+function readEmailTemplate(path, data, callback: (err, html) => any) {
+    fs.readFile(path, { encoding: 'utf-8' }, callback);
 }
