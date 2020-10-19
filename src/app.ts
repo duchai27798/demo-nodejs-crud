@@ -29,7 +29,6 @@ app.set('view engine', 'ejs');
 app.set('layout', 'layouts/root');
 
 app.use(express.static(path.join(__dirname, '/resources')));
-app.use(express.static(path.join(__dirname, '/uploads')));
 app.use(expressLayouts);
 app.use(bodyParser.json());
 app.use(

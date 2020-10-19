@@ -9,9 +9,9 @@
  */
 
 import { validationResult } from 'express-validator';
-import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import { User } from '../models';
+import { convertFormatErrors } from '../helpers/convert-format-errors.helper';
 
 /**
  * Handle register
@@ -23,27 +23,9 @@ import { User } from '../models';
 export function registerService(req, res, success = (data) => {}, failure = (error) => {}) {
     /* Get validate errors */
     const errors = validationResult(req).array() || [];
-    const errorObject = {};
+    const contentObject = convertFormatErrors(req.body, errors);
 
-    /* Transform errors array to object with key is field name */
-    errors.forEach((field) => {
-        errorObject[field.param] = errorObject[field.param] || field;
-    });
-
-    if (!_.isEmpty(errors)) {
-        const contentObject = {};
-
-        /* put error into the corresponding field  */
-        _.forEach(_.keys(req.body), (field) => {
-            contentObject[field] = {
-                value: _.get(req, `body.${field}`),
-            };
-
-            if (errorObject[field]) {
-                contentObject[field]['msg'] = errorObject[field].msg;
-            }
-        });
-
+    if (contentObject) {
         return failure(contentObject);
     }
 
@@ -57,8 +39,6 @@ export function registerService(req, res, success = (data) => {}, failure = (err
                 ...req.body,
                 password: hash,
             });
-
-            console.log(user)
 
             return user.save().then(
                 (data) => success(true),

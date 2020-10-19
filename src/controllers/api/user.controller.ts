@@ -11,6 +11,7 @@
 import { User } from '../../models';
 import { registerService } from '../../services/register.service';
 import {UploadFileController} from "./upload-file.controller";
+import {UserObjectService} from "../../services/user-object.service";
 
 export class UserController {
     /**
@@ -39,9 +40,11 @@ export class UserController {
             .limit(req.params['limit']++ || 5)
             .skip(skip)
             .then((users) => {
-                const listUsers = users.map(UserController.userObject);
+                /* convert user data to list user with format */
+                const listUsers = users.map(UserObjectService.convert);
 
-                User.count(searchBy, (err, count) => {
+                /* count all user */
+                User.countDocuments(searchBy, (err, count) => {
                     res.json({
                         listUsers,
                         size: count,
@@ -58,23 +61,8 @@ export class UserController {
      */
     public static index(req, res) {
         User.findById(req.params.id).then((user) => {
-            res.json(UserController.userObject(user));
+            res.json(UserObjectService.convert(user));
         });
-    }
-
-    /**
-     * transfer user data to user pattern
-     * @param user
-     * @returns {{full_name: any, is_active: any, _id: any, src_img: string, email: any}}
-     */
-    private static userObject(user) {
-        return {
-            _id: user['_id'],
-            email: user['email'],
-            full_name: user['full_name'],
-            src_img: `${user['src_img'] ? 'uploads/' + user['src_img'] : ''}`,
-            is_active: user['is_active'],
-        };
     }
 
     /**
