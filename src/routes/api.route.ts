@@ -33,6 +33,8 @@ const storage = multer.diskStorage({
     },
 });
 
+apiRouter.get('/current-user', AuthController.getCurrentUser);
+
 apiRouter.get('/users/:id', UserController.index);
 
 apiRouter.get('/users/:limit/:page/:searchBy?', UserController.getAll);

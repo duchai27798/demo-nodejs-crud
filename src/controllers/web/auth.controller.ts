@@ -115,4 +115,10 @@ export class AuthController {
             email: req.session.email,
         });
     }
+
+    public static logout(req, res) {
+        res.cookie('auth', { maxAge: Date.now() });
+
+        return res.redirect('/login');
+    }
 }

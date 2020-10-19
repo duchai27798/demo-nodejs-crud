@@ -13,8 +13,16 @@ import { convertFormatErrors } from '../../helpers/convert-format-errors.helper'
 import { sendEmail } from '../../helpers/send-email.helper';
 import { generateCodeToken } from '../../helpers/generate-code-token.helper';
 import { User, Verify } from '../../models';
+import _ from 'lodash';
+import {UserObjectService} from "../../services/user-object.service";
 
 export class AuthController {
+    /**
+     * send verify code to email
+     * @param req
+     * @param res
+     * @returns {any}
+     */
     public static sendVerifyToken(req, res) {
         /* Get validate errors */
         const errors = validationResult(req).array() || [];
@@ -44,6 +52,12 @@ export class AuthController {
         return res.json({ success: true });
     }
 
+    /**
+     * verify to active account
+     * @param req
+     * @param res
+     * @returns {any}
+     */
     public static verifyHandle(req, res) {
         /* Get validate errors */
         const errors = validationResult(req).array() || [];
@@ -58,5 +72,16 @@ export class AuthController {
         });
 
         return res.json({ success: true });
+    }
+
+    /**
+     * get current account that being login
+     * @param req
+     * @param res
+     */
+    public static getCurrentUser(req, res) {
+        User.findOne({ email: _.get(req, 'cookies.auth.email') }).then(user => {
+            res.json(UserObjectService.convert(user));
+        });
     }
 }

@@ -9,10 +9,9 @@
  */
 
 import { validationResult } from 'express-validator';
-import _ from 'lodash';
 import bcrypt from 'bcrypt';
 import { User } from '../models';
-import {convertFormatErrors} from "../helpers/convert-format-errors.helper";
+import { convertFormatErrors } from '../helpers/convert-format-errors.helper';
 
 /**
  * Handle register
@@ -40,8 +39,6 @@ export function registerService(req, res, success = (data) => {}, failure = (err
                 ...req.body,
                 password: hash,
             });
-
-            console.log(user)
 
             return user.save().then(
                 (data) => success(true),

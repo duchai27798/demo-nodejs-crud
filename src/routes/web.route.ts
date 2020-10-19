@@ -26,6 +26,8 @@ webRouter.get('/register', AuthController.register);
 
 webRouter.post('/register', validateRegister(), AuthController.handleRegister);
 
+webRouter.get('/logout', AuthController.logout);
+
 webRouter.get('/reset-password', AuthController.resetPassword);
 
 webRouter.get('/verify-email', AuthController.verifyEmail);
