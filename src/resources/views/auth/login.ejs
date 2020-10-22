@@ -1,6 +1,6 @@
 <%- contentFor('content') %>
 <div class="min-vh-100 d-flex justify-content-center align-items-center">
-    <form action="/login" method="post" class="login-form">
+    <form action="/web/login" method="post" class="login-form">
         <h3 class="size-22 font-weight-bolder text-center m-b-20">Account</h3>
         <% if (errors) { %>
             <div class="alert-danger p-2 mb-3">
@@ -19,11 +19,11 @@
         <button class="btn btn-success m-b-30 w-100">Login</button>
         <div class="text-black-50 text-center mb-1">
             Can't login?
-            <a href="/reset-password" class="text-primary">Forgot password</a>
+            <a href="/web/reset-password" class="text-primary">Forgot password</a>
         </div>
         <div class="text-black-50 text-center">
             Create an account?
-            <a href="/register" class="text-primary">Sign up</a>
+            <a href="/web/register" class="text-primary">Sign up</a>
         </div>
     </form>
 </div>

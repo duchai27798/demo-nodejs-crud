@@ -24,7 +24,7 @@ export class AuthController {
      * @returns {any}
      */
     public static register(req, res) {
-        return res.render('register', { content: req.session.content || null });
+        return res.render('auth/register', { content: req.session.content || null });
     }
 
     /**
@@ -37,11 +37,11 @@ export class AuthController {
             req,
             res,
             (data) => {
-                return res.redirect('/login');
+                return res.redirect('/web/login');
             },
             (error) => {
                 req.session.content = error;
-                return res.redirect('/register');
+                return res.redirect('/web/register');
             }
         );
     }
@@ -53,7 +53,7 @@ export class AuthController {
      * @returns {any}
      */
     public static login(req, res) {
-        return res.render('login', { errors: req.session.errors || null });
+        return res.render('auth/login', { errors: req.session.errors || null });
     }
 
     /**
@@ -67,6 +67,7 @@ export class AuthController {
         return User.findOne({ email: req.body.email }).then((user) => {
             /* If user is exited, check password */
             if (user) {
+                console.log(user)
                 return bcrypt.compare(req.body.password, user['password']).then((result) => {
                     /* if login is successful, redirect to home */
                     if (result) {
@@ -100,7 +101,7 @@ export class AuthController {
     private static loginFailed(req, res) {
         req.session.errors = 'User or password is wrong';
 
-        return res.redirect('/login');
+        return res.redirect('/web/login');
     }
 
     /**
@@ -110,7 +111,7 @@ export class AuthController {
      * @returns {any}
      */
     public static resetPassword(req, res) {
-        return res.render('reset-password', {
+        return res.render('auth/reset-password', {
             content: req.session.content || '',
             email: req.session.email || '',
         });
@@ -164,7 +165,7 @@ export class AuthController {
             }
         );
 
-        return res.redirect('/login');
+        return res.redirect('/web/login');
     }
 
     /**
@@ -179,10 +180,10 @@ export class AuthController {
 
         /* if errors then push error to view */
         if (contentObject) {
-            return res.redirect('/forbidden');
+            return res.redirect('/web/forbidden');
         }
 
-        res.render('form-reset-password', {
+        res.render('auth/form-reset-password', {
             content: contentObject,
             email: req.body.email || null,
         });
@@ -200,7 +201,7 @@ export class AuthController {
 
         /* if errors then push error to view */
         if (contentObject) {
-            res.render('form-reset-password', {
+            res.render('auth/form-reset-password', {
                 content: contentObject,
                 email: req.body.email || null,
             });
@@ -216,7 +217,7 @@ export class AuthController {
             );
         }).then(value => {
             console.log(value);
-            res.redirect('/login');
+            res.redirect('/web/login');
         });
     }
 
@@ -227,7 +228,7 @@ export class AuthController {
      * @returns {any}
      */
     public static verifyEmail(req, res) {
-        return res.render('verify-email', {
+        return res.render('auth/verify-email', {
             errors: req.session.errors,
             email: req.session.email,
         });
@@ -242,6 +243,6 @@ export class AuthController {
     public static logout(req, res) {
         res.cookie('auth', { maxAge: Date.now() });
 
-        return res.redirect('/login');
+        return res.redirect('/web/login');
     }
 }

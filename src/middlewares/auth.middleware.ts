@@ -24,7 +24,7 @@ export function checkAuth(req, res, next) {
         return next();
     }
 
-    return res.redirect('/login');
+    return res.redirect('/web/login');
 }
 
 /**
@@ -40,10 +40,10 @@ export function checkVerify(req, res, next) {
                 next();
             } else {
                 req.session.email = _.get(user, 'email');
-                res.redirect('/verify-email');
+                res.redirect('/web/verify-email');
             }
         });
     } else {
-        res.redirect('/login');
+        res.redirect('/web/login');
     }
 }

@@ -9,13 +9,13 @@
  */
 
 import express from 'express';
-import { validateRegister } from '../validators/register.validate';
-import { AuthController } from '../controllers/web/auth.controller';
-import { checkAuth, checkVerify } from '../middlewares/auth.middleware';
-import { HomeController } from '../controllers/web/home.controller';
-import { validateEmail } from '../validators/email.validator';
-import { validateResetPasswordToken } from '../validators/reset-password-token.validatior';
-import {validateResetPassword} from "../validators/reset-password.validator";
+import { validateRegister } from '../../validators/register.validate';
+import { AuthController } from '../../controllers/web/auth.controller';
+import { checkAuth, checkVerify } from '../../middlewares/auth.middleware';
+import { HomeController } from '../../controllers/web/home.controller';
+import { validateEmail } from '../../validators/email.validator';
+import { validateResetPasswordToken } from '../../validators/reset-password-token.validatior';
+import {validateResetPassword} from "../../validators/reset-password.validator";
 
 const webRouter = express.Router();
 

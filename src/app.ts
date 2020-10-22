@@ -17,7 +17,6 @@ import logger from 'morgan';
 import expressSession from 'express-session';
 import { generateHelper } from './helpers/common.helper';
 import cookieParser from 'cookie-parser';
-import csrf from 'csurf';
 
 dotenv.config({ path: `${__dirname}/../.env` });
 
@@ -41,15 +40,6 @@ app.use(
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(logger('dev'));
-
-/* Used to protect application */
-app.use(csrf({ cookie: true }));
-app.use(function (req, res, next) {
-    var token = req.csrfToken();
-    res.cookie('XSRF-TOKEN', token);
-    res.locals.csrfToken = token;
-    next();
-});
 
 /* Create helper function for view */
 generateHelper(app);

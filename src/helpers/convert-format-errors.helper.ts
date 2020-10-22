@@ -24,7 +24,7 @@ export function convertFormatErrors(data, errors) {
         /* put error into the corresponding field  */
         _.forEach(_.keys(data), (field) => {
             contentObject[field] = {
-                value: _.get(data, `${field}`),
+                value: !_.includes(field, 'password') ? _.get(data, `${field}`) : null,
             };
 
             if (errorObject[field]) {

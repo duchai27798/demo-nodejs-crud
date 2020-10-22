@@ -10,8 +10,8 @@
 
 import { User } from '../../models';
 import { registerService } from '../../services/register.service';
-import {UploadFileController} from "./upload-file.controller";
-import {UserObjectService} from "../../services/user-object.service";
+import { UploadFileController } from './upload-file.controller';
+import { UserObjectService } from '../../services/user-object.service';
 
 export class UserController {
     /**
